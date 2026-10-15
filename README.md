@@ -9,7 +9,7 @@ obsidian-bridge is a mod for Claude Code. It keeps one note in your Obsidian vau
 - The note shows each tool step as one short line, for example `✏️ Edited src/app.ts (+2 −1)`. It does not show the code, the command output or the diff.
 - At the end of each turn, the note shows how many files and lines the turn changed.
 - The note name is the start date and time, then the session name. An example is `2026-10-15 6-20 PM - Fix the login bug.md`. The first name comes from your first prompt. When the desktop app gives the session a name in its sidebar, the mod changes the note name to that name.
-- The note properties show the status of the session: working, waiting for you, question on the Mac, or ended.
+- The `status` property of the note shows the state of the session: `🟢 working`, `🟡 waiting for you`, `❓ question on the Mac` or `⚪ ended`.
 
 ## Reply from your phone
 
@@ -24,7 +24,7 @@ A reply from the phone turns on away mode. In away mode, Claude does not open qu
 
 ## How it writes the note
 
-The mod writes to the note through the Obsidian command line interface (CLI) with `obsidian eval`. It changes the note only when the note is still the same as the copy that it read. Thus your edits on the phone are safe. If the CLI does not answer, the mod writes the note file directly.
+The mod writes to the note through the Obsidian command line interface (CLI) with `obsidian eval`. It changes the note only when the note is still the same as the copy that it read. Because of this, the mod does not overwrite your edits from the phone. If the CLI does not answer, the mod writes the note file directly.
 
 ## Requirements
 
