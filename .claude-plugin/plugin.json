@@ -1,0 +1,61 @@
+{
+  "name": "obsidian-bridge",
+  "version": "0.1.0",
+  "description": "Mirrors each Claude session into an Obsidian note and takes replies that you write in that note.",
+  "author": {
+    "name": "Utsav Singh",
+    "url": "https://github.com/utsavsingh899"
+  },
+  "repository": "https://github.com/utsavsingh899/claude-obsidian-bridge",
+  "license": "MIT",
+  "userConfig": {
+    "enabled": {
+      "type": "boolean",
+      "title": "Mirror sessions",
+      "description": "Make a note for each session. You can also use /obsidian off in one session.",
+      "default": true
+    },
+    "vault": {
+      "type": "string",
+      "title": "Vault name",
+      "description": "The name of the Obsidian vault, as the Obsidian CLI knows it. Empty uses the name of the vault folder.",
+      "default": ""
+    },
+    "vaultPath": {
+      "type": "string",
+      "title": "Vault folder",
+      "description": "The absolute path of the vault. Empty finds it from the Obsidian vault list.",
+      "default": ""
+    },
+    "folder": {
+      "type": "string",
+      "title": "Notes folder",
+      "description": "The folder in the vault for the session notes.",
+      "default": "Claude Sessions"
+    },
+    "cli": {
+      "type": "string",
+      "title": "Obsidian CLI",
+      "description": "The path of the Obsidian CLI. Empty tries the usual places.",
+      "default": ""
+    },
+    "pollSeconds": {
+      "type": "number",
+      "title": "Reply check interval (seconds)",
+      "description": "How often Claude reads the note for a reply.",
+      "default": 3
+    },
+    "settleSeconds": {
+      "type": "number",
+      "title": "Settle time (seconds)",
+      "description": "The reply area must stay the same for this time before Claude takes the message.",
+      "default": 5
+    },
+    "flushSeconds": {
+      "type": "number",
+      "title": "Work log interval (seconds)",
+      "description": "How often Claude writes the collected tool steps into the note.",
+      "default": 15
+    }
+  }
+}

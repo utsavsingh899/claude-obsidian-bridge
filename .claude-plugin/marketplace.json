@@ -1,0 +1,14 @@
+{
+  "name": "obsidian-bridge",
+  "description": "The obsidian-bridge mod for Claude Code: a session note in Obsidian, with replies from your phone.",
+  "owner": {
+    "name": "utsavsingh899"
+  },
+  "plugins": [
+    {
+      "name": "obsidian-bridge",
+      "source": "./",
+      "description": "Mirrors each Claude session into an Obsidian note and takes replies that you write in that note."
+    }
+  ]
+}
