@@ -436,10 +436,11 @@ export const register: Register = (on, options) => {
     const origin = e.origin
     const isMine = origin.kind === 'plugin' && origin.name === ME
     const isPerson = origin.kind === 'composer' || origin.kind === 'sdk' || origin.kind === 'bridge' || origin.kind === 'unclassified'
-    if (!isMine && isPerson && !e.text.startsWith('/')) {
-      firstPrompt ??= e.text
+    const typed = N.cleanPrompt(e.text)
+    if (!isMine && isPerson && typed && !typed.startsWith('/')) {
+      firstPrompt ??= typed
       await $.store.delete(`away:${await $.session.id()}`)
-      pushBlock(N.callout('quote', `${now().time} · You (Mac)`, N.cut(e.text, 4000)))
+      pushBlock(N.callout('quote', `${now().time} · You (Mac)`, N.cut(typed, 4000)))
     }
     return next(e)
   })

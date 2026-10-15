@@ -405,6 +405,15 @@ export function newNote(o: {
   ].join('\n')
 }
 
+// The prompt as you typed it, without the <system-reminder> blocks that the
+// app adds to some prompts.
+export function cleanPrompt(text: string): string {
+  return text
+    .replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
 // The `vault=` argument for the Obsidian CLI. No name: the CLI uses its active vault.
 export function vaultArgs(name: string): string[] {
   return name ? [`vault=${name}`] : []

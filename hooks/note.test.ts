@@ -186,6 +186,13 @@ describe('helpers', () => {
     expect(N.vaultArgs('')).toEqual([])
   })
 
+  test('a logged prompt has no system-reminder text', () => {
+    const text = '<system-reminder>\nThe app adds this.\n</system-reminder>\nFix the login bug.\n<system-reminder>more</system-reminder>'
+    expect(N.cleanPrompt(text)).toBe('Fix the login bug.')
+    expect(N.cleanPrompt('<system-reminder>only this</system-reminder>')).toBe('')
+    expect(N.cleanPrompt('Keep a <b>tag</b> that is not a reminder.')).toBe('Keep a <b>tag</b> that is not a reminder.')
+  })
+
   test('quiet tools make no line', () => {
     expect(N.toolLine({ tool: 'ToolSearch', input: {}, cwd: '', home: '', time: '6:24 PM', isError: false })).toBe(undefined)
   })
