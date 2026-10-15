@@ -144,10 +144,35 @@ export function consumeSplices(
   ]
 }
 
+// Escapes each "<" outside code. Obsidian reads text such as <name> as an
+// HTML tag, and a tag with no end can hide the rest of the note.
+export function escapeTags(markdown: string): string {
+  let fence: string | undefined
+  return markdown
+    .split('\n')
+    .map(line => {
+      const mark = /^\s*(`{3,}|~{3,})/.exec(line)?.[1]
+      if (fence !== undefined) {
+        if (mark && mark[0] === fence[0] && mark.length >= fence.length && line.trim() === mark) fence = undefined
+        return line
+      }
+      if (mark) {
+        fence = mark
+        return line
+      }
+      // Leave inline code as it is.
+      return line
+        .split(/(`+[^`]*`+)/)
+        .map((part, i) => (i % 2 === 1 ? part : part.replace(/</g, '&lt;')))
+        .join('')
+    })
+    .join('\n')
+}
+
 export function callout(kind: string, title: string, body = '', isFolded = false): string {
-  const head = `> [!${kind}]${isFolded ? '-' : ''} ${title}`
+  const head = `> [!${kind}]${isFolded ? '-' : ''} ${escapeTags(title)}`
   const lines = body
-    ? body.replace(/\r\n?/g, '\n').split('\n').map(line => (line ? `> ${line}` : '>'))
+    ? escapeTags(body.replace(/\r\n?/g, '\n')).split('\n').map(line => (line ? `> ${line}` : '>'))
     : []
   return `${[head, ...lines].join('\n')}\n\n`
 }
@@ -257,7 +282,7 @@ export function toolLine(o: {
     const mcp = /^mcp__(.+?)__(.+)$/.exec(o.tool)
     return mcp ? `🔌 ${short(mcp[1] ?? '', 30)} · ${mcp[2]}` : `🔧 ${o.tool}`
   })()
-  return `- ${o.time} · ${what}${o.isError ? ' ❌' : ''}`
+  return `- ${o.time} · ${escapeTags(what)}${o.isError ? ' ❌' : ''}`
 }
 
 // The files that one turn changed, in one line.
@@ -405,11 +430,12 @@ export function newNote(o: {
   ].join('\n')
 }
 
-// The prompt as you typed it, without the <system-reminder> blocks that the
-// app adds to some prompts.
+// The prompt as you typed it. The app wraps the text that it adds in tags with
+// a hyphen, such as <system-reminder> and <side-sessions-event>. This removes
+// those blocks. A prompt with only such blocks did not come from you.
 export function cleanPrompt(text: string): string {
   return text
-    .replace(/<system-reminder>[\s\S]*?<\/system-reminder>/g, '')
+    .replace(/<([a-z][a-z0-9]*-[a-z0-9-]*)(\s[^>]*)?>[\s\S]*?<\/\1>/g, '')
     .replace(/\n{3,}/g, '\n\n')
     .trim()
 }

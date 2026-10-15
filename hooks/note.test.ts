@@ -193,6 +193,23 @@ describe('helpers', () => {
     expect(N.cleanPrompt('Keep a <b>tag</b> that is not a reminder.')).toBe('Keep a <b>tag</b> that is not a reminder.')
   })
 
+  test('a tag in text is escaped, but not in code', () => {
+    const text = 'Name: <date> <time> - <title>.md\nUse `<b>` here.\n```html\n<div>x</div>\n```\nAfter <end>'
+    expect(N.escapeTags(text)).toBe('Name: &lt;date> &lt;time> - &lt;title>.md\nUse `<b>` here.\n```html\n<div>x</div>\n```\nAfter &lt;end>')
+  })
+
+  test('a callout escapes the tags in its title and body', () => {
+    const block = N.callout('abstract', '9:49 PM · <recap>', 'Notes are named <start date and time>.')
+    expect(block).toBe('> [!abstract] 9:49 PM · &lt;recap>\n> Notes are named &lt;start date and time>.\n\n')
+  })
+
+  test('a prompt that the app wrote is not logged', () => {
+    const event = '<system-reminder>\nA session finished.\n</system-reminder>\n<side-sessions-event>None of the sessions works now.</side-sessions-event>'
+    expect(N.cleanPrompt(event)).toBe('')
+    expect(N.cleanPrompt('<cross-session-message from="x">hi</cross-session-message>\nDo the thing.')).toBe('Do the thing.')
+    expect(N.cleanPrompt('<pasted_content id="1">my paste</pasted_content>')).toBe('<pasted_content id="1">my paste</pasted_content>')
+  })
+
   test('quiet tools make no line', () => {
     expect(N.toolLine({ tool: 'ToolSearch', input: {}, cwd: '', home: '', time: '6:24 PM', isError: false })).toBe(undefined)
   })
